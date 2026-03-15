@@ -20,7 +20,7 @@
 .sidebar{width:220px;min-width:220px;background:#fff;border-right:1px solid var(--border);display:flex;flex-direction:column;height:100vh;}
 .sidebar-logo{padding:16px 14px;border-bottom:1px solid var(--border);}
 .sidebar-logo-box{display:flex;align-items:center;gap:10px;}
-.sidebar-logo-icon{width:40px;height:40px;border-radius:10px;background:var(--gold);display:flex;align-items:center;justify-content:center;font-size:20px;}
+.sidebar-logo-icon{width:40px;height:40px;border-radius:10px;background:var(--gold);display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0;}
 .sidebar-logo-text h2{font-size:13px;font-weight:800;}
 .sidebar-logo-text p{font-size:11px;color:var(--gray);}
 .sidebar-usuario{font-size:11px;color:var(--gray);padding:8px 14px 0;}
@@ -43,7 +43,7 @@
 .dash-card .dv{font-size:20px;font-weight:800;color:var(--gold);}
 .dash-card .dl{font-size:11px;color:var(--gray);margin-top:2px;}
 .dash-card .ds{font-size:11px;color:var(--danger);margin-top:2px;}
-.venda-layout{display:flex;height:100vh;}
+.venda-layout{display:flex;height:calc(100vh - 0px);}
 .venda-esq{flex:1;padding:14px;overflow-y:auto;border-right:1px solid var(--border);}
 .venda-dir{width:320px;min-width:320px;background:#fff;display:flex;flex-direction:column;height:100vh;overflow:hidden;}
 .venda-filtros{display:flex;gap:8px;margin-bottom:12px;}
@@ -155,11 +155,32 @@
 .btn-backup{width:100%;padding:11px;border-radius:10px;border:none;font-size:13px;font-weight:700;cursor:pointer;}
 .btn-bkp-baixar{background:#1f2937;color:#fff;}
 .btn-bkp-restaurar{background:#fff;border:2px solid var(--border)!important;color:var(--text);}
-.alerta{position:fixed;top:14px;left:50%;transform:translateX(-50%);background:#1a1a2e;color:#facc15;padding:9px 18px;border-radius:999px;font-size:13px;font-weight:600;z-index:999;display:none;box-shadow:0 4px 20px rgba(0,0,0,0.3);}
+.alerta{position:fixed;top:14px;left:50%;transform:translateX(-50%);background:#1a1a2e;color:#facc15;padding:9px 18px;border-radius:999px;font-size:13px;font-weight:600;z-index:999;display:none;box-shadow:0 4px 20px rgba(0,0,0,0.3);white-space:nowrap;}
+
+/* ===== RESPONSIVO CELULAR ===== */
+@media(max-width:768px){
+  #app{height:auto;overflow:auto;}
+  .layout{flex-direction:column;height:auto;}
+  .sidebar{width:100%;min-width:100%;flex-direction:row;height:auto;border-right:none;border-bottom:2px solid var(--border);overflow-x:auto;}
+  .sidebar-logo{border-bottom:none;padding:10px 12px;flex-shrink:0;}
+  .sidebar-logo-text p{display:none;}
+  .sidebar-usuario{display:none;}
+  .sidebar-nav{flex:1;display:flex;flex-direction:row;padding:6px;overflow-x:auto;gap:4px;}
+  .sidebar-nav .nav-item{white-space:nowrap;margin-bottom:0;padding:8px 12px;font-size:12px;}
+  .sidebar-footer{padding:6px;border-top:none;flex-shrink:0;}
+  .nav-sair{white-space:nowrap;padding:8px 12px;font-size:12px;}
+  .main{height:auto;min-height:100vh;}
+  .venda-layout{flex-direction:column;height:auto;}
+  .venda-esq{border-right:none;border-bottom:1px solid var(--border);height:auto;max-height:55vh;overflow-y:auto;}
+  .venda-dir{width:100%;min-width:100%;height:auto;max-height:none;}
+  .prod-grid{grid-template-columns:repeat(auto-fill,minmax(140px,1fr));}
+  .dash-grid{grid-template-columns:repeat(auto-fit,minmax(140px,1fr));}
+}
 </style>
 </head>
 <body>
 <div class="alerta" id="alerta"></div>
+
 <div id="tela-login">
   <div class="login-box">
     <div class="login-logo">⛪</div>
@@ -171,6 +192,7 @@
     <p class="login-dica">admin / 1234 &nbsp;·&nbsp; caixa / 0000</p>
   </div>
 </div>
+
 <div id="app">
 <div class="layout">
   <aside class="sidebar">
@@ -276,7 +298,7 @@
       <div class="rel-periodo"><label>Período:</label><select id="rel-per" onchange="renderRel()"><option value="hoje">Hoje</option><option value="semana">Esta semana</option><option value="mes" selected>Este mês</option><option value="tudo">Tudo</option></select></div>
       <div class="rel-body" id="rel-body"></div>
       <div class="backup-area">
-        <button class="btn-backup btn-bkp-baixar" onclick="fazerBackup()">💾 Fazer Backup (baixar arquivo)</button>
+        <button class="btn-backup btn-bkp-baixar" onclick="fazerBackup()">💾 Fazer Backup</button>
         <button class="btn-backup btn-bkp-restaurar" onclick="document.getElementById('inp-restaurar').click()">📂 Restaurar Backup</button>
         <input type="file" id="inp-restaurar" accept=".json" style="display:none" onchange="restaurarBackup(event)"/>
       </div>
@@ -284,6 +306,7 @@
   </main>
 </div>
 </div>
+
 <div class="modal-overlay" id="modal-prod">
   <div class="modal">
     <h3 id="mp-titulo">Novo Produto</h3>
@@ -319,6 +342,7 @@
     </div>
   </div>
 </div>
+
 <div class="modal-overlay" id="modal-forn">
   <div class="modal">
     <h3 id="mf-titulo">Novo Fornecedor</h3>
@@ -389,6 +413,7 @@ function ir(pg){
   document.querySelectorAll('.pagina').forEach(p=>p.classList.remove('ativa'));
   document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('ativo'));
   document.getElementById('pg-'+pg).classList.add('ativa');
+
   const mapa=['painel','venda','produtos','historico','fornecedores','relatorios'];
   const idx=mapa.indexOf(pg);
   const items=document.querySelectorAll('.nav-item');
@@ -853,18 +878,24 @@ function fazerBackup(){
   a.click();
   document.body.removeChild(a);
   URL.revokeObjectURL(url);
-  alerta('✅ Backup baixado (guarde esse arquivo em local seguro)');
+  alerta('✅ Backup baixado (guarde em local seguro)');
 }
 
 function restaurarBackup(ev){
   const file=ev.target.files[0];
-  if(!file){return;}
-  if(!confirm('Restaurar esse backup e substituir os dados atuais?')){ev.target.value='';return;}
+  if(!file)return;
+  if(!confirm('Restaurar esse backup e substituir os dados atuais?')){
+    ev.target.value='';
+    return;
+  }
   const reader=new FileReader();
   reader.onload=e=>{
     try{
       const dados=JSON.parse(e.target.result);
-      if(!dados.produtos||!dados.vendas||!dados.fornecs){alerta('❌ Arquivo de backup inválido');return;}
+      if(!dados.produtos||!dados.vendas||!dados.fornecs){
+        alerta('❌ Arquivo de backup inválido');
+        return;
+      }
       produtos=dados.produtos;
       vendas=dados.vendas;
       fornecs=dados.fornecs;
@@ -889,8 +920,10 @@ function fecharModal(id){
   document.getElementById(id).classList.remove('aberto');
 }
 
-// inicial
-atualizarDash();
+// inicial (se já tiver dados)
+if(produtos.length||vendas.length||fornecs.length){
+  atualizarDash();
+}
 </script>
 </body>
 </html>
