@@ -144,7 +144,7 @@
 .caixa-info-row:last-child{border-bottom:none;}
 .caixa-info-row span:first-child{color:var(--gray);}
 .caixa-info-row span:last-child{font-weight:700;color:var(--text);}
-.caixa-info-row.destaque{background:var(--gold-bg);margin:0 -18px;padding:10px 18px;border-bottom:none;}
+.caixa-info-row.destaque{background:var(--gold-bg);margin:0 -18px;padding:10px 18px;border-bottom:none;margin-top:4px;margin-bottom:4px;}
 .caixa-info-row.destaque span:first-child{color:var(--gold);font-weight:700;}
 .caixa-info-row.destaque span:last-child{color:var(--gold);font-size:16px;}
 .caixa-info-row.positivo span:last-child{color:var(--success);}
@@ -154,14 +154,25 @@
 .caixa-fechado p{font-size:14px;margin-bottom:16px;}
 .btn-abrir-caixa{width:100%;padding:13px;border-radius:12px;border:none;background:var(--gold);color:#fff;font-size:15px;font-weight:700;cursor:pointer;margin-top:8px;}
 .btn-fechar-caixa{width:100%;padding:11px;border-radius:12px;border:2px solid var(--danger);background:#fff;color:var(--danger);font-size:13px;font-weight:700;cursor:pointer;margin-top:8px;}
+.btn-imprimir{width:100%;padding:11px;border-radius:12px;border:2px solid #1f2937;background:#fff;color:#1f2937;font-size:13px;font-weight:700;cursor:pointer;margin-top:8px;}
 .badge-aberto{background:#dcfce7;color:#166534;padding:3px 12px;border-radius:999px;font-size:11px;font-weight:700;}
-.badge-fechado{background:#fee2e2;color:var(--danger);padding:3px 12px;border-radius:999px;font-size:11px;font-weight:700;}
+.badge-fechado-cx{background:#fee2e2;color:var(--danger);padding:3px 12px;border-radius:999px;font-size:11px;font-weight:700;}
+.hist-cx-titulo{font-size:14px;font-weight:800;margin:20px 0 10px;}
+.hist-cx-card{background:#fff;border-radius:12px;border:1px solid var(--border);padding:12px 14px;margin-bottom:8px;}
+.hist-cx-topo{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;}
+.hist-cx-data{font-size:13px;font-weight:700;}
+.hist-cx-rows{font-size:12px;color:var(--gray);}
+.hist-cx-row{display:flex;justify-content:space-between;padding:3px 0;border-bottom:1px solid var(--border);}
+.hist-cx-row:last-child{border-bottom:none;}
+.hist-cx-row span:last-child{font-weight:600;color:var(--text);}
+.diff-pos{color:var(--success)!important;}
+.diff-neg{color:var(--danger)!important;}
 .forn-lista{padding:14px 20px;}
 .forn-card{background:#fff;border-radius:12px;border:1px solid var(--border);padding:11px 13px;margin-bottom:7px;cursor:pointer;}
 .forn-card:hover{border-color:var(--gold);}
 .forn-nome{font-size:13px;font-weight:700;}
 .forn-info{font-size:11px;color:var(--gray);margin-top:2px;}
-.rel-periodo{padding:10px 20px;background:#fff;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px;}
+.rel-periodo{padding:10px 20px;background:#fff;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px;flex-wrap:wrap;}
 .rel-periodo label{font-size:13px;font-weight:600;}
 .rel-periodo select{padding:6px 10px;border-radius:10px;border:1px solid var(--border);font-size:12px;background:var(--bg);outline:none;}
 .rel-body{padding:14px 20px;}
@@ -175,6 +186,21 @@
 .btn-bkp-baixar{background:#1f2937;color:#fff;}
 .btn-bkp-restaurar{background:#fff;border:2px solid var(--border)!important;color:var(--text);}
 .alerta{position:fixed;top:14px;left:50%;transform:translateX(-50%);background:#1a1a2e;color:#facc15;padding:9px 18px;border-radius:999px;font-size:13px;font-weight:600;z-index:999;display:none;box-shadow:0 4px 20px rgba(0,0,0,0.3);white-space:nowrap;}
+
+/* ===== IMPRESSÃO ===== */
+@media print{
+  #tela-login,#alerta,.sidebar,.btn-abrir-caixa,.btn-fechar-caixa,.btn-imprimir,.backup-area,.page-header button{display:none!important;}
+  #app{display:block!important;height:auto!important;overflow:visible!important;}
+  .layout{display:block!important;}
+  .main{overflow:visible!important;}
+  .pagina{display:none!important;}
+  .pagina.ativa{display:block!important;}
+  body{background:#fff!important;}
+  .caixa-body{padding:0!important;}
+  .caixa-info-row.destaque{background:none!important;border-bottom:1px solid #ccc!important;}
+}
+
+/* ===== RESPONSIVO ===== */
 @media(max-width:768px){
   #app{height:auto;overflow:auto;}
   .layout{flex-direction:column;height:auto;}
@@ -306,7 +332,7 @@
     </div>
 
     <div class="pagina" id="pg-historico">
-      <div class="page-header"><h2>🕐 Histórico</h2></div>
+      <div class="page-header"><h2>🕐 Histórico de Vendas</h2></div>
       <div class="hist-filtros"><div class="cm" style="margin:0;max-width:220px;"><label>Data</label><input id="h-data" type="date" onchange="renderHistorico()"/></div></div>
       <div class="hist-lista" id="hist-lista"></div>
     </div>
@@ -323,7 +349,16 @@
 
     <div class="pagina" id="pg-relatorios">
       <div class="page-header"><h2>📈 Relatórios</h2></div>
-      <div class="rel-periodo"><label>Período:</label><select id="rel-per" onchange="renderRel()"><option value="hoje">Hoje</option><option value="semana">Esta semana</option><option value="mes" selected>Este mês</option><option value="tudo">Tudo</option></select></div>
+      <div class="rel-periodo">
+        <label>Período:</label>
+        <select id="rel-per" onchange="renderRel()">
+          <option value="hoje">Hoje</option>
+          <option value="semana">Esta semana</option>
+          <option value="mes" selected>Este mês</option>
+          <option value="tudo">Tudo</option>
+        </select>
+        <button class="btn-novo" onclick="imprimirRelatorio()">🖨️ Imprimir</button>
+      </div>
       <div class="rel-body" id="rel-body"></div>
       <div class="backup-area">
         <button class="btn-backup btn-bkp-baixar" onclick="fazerBackup()">💾 Fazer Backup</button>
@@ -336,6 +371,7 @@
 </div>
 </div>
 
+<!-- MODAIS -->
 <div class="modal-overlay" id="modal-prod">
   <div class="modal">
     <h3 id="mp-titulo">Novo Produto</h3>
@@ -391,7 +427,7 @@
 <div class="modal-overlay" id="modal-caixa">
   <div class="modal">
     <h3>💵 Abrir Caixa</h3>
-    <p style="font-size:12px;color:var(--gray);margin-bottom:14px;">Informe o valor em dinheiro que está na gaveta para iniciar o atendimento.</p>
+    <p style="font-size:12px;color:var(--gray);margin-bottom:14px;">Informe a data e o valor em dinheiro na gaveta para iniciar o atendimento.</p>
     <div class="cm"><label>Data do caixa</label><input id="cx-data" type="date"/></div>
     <div class="cm"><label>Valor de abertura (R$) *</label><input id="cx-valor" type="number" step="0.01" min="0" placeholder="0,00"/></div>
     <div class="modal-btns">
@@ -405,21 +441,22 @@
   <div class="modal">
     <h3>🔒 Fechar Caixa</h3>
     <p style="font-size:12px;color:var(--gray);margin-bottom:14px;">Conte o dinheiro na gaveta e informe o valor para conferência.</p>
+    <div id="fc-resumo" style="margin-bottom:12px;padding:10px;background:var(--gold-bg);border-radius:10px;font-size:13px;"></div>
     <div class="cm"><label>Valor contado na gaveta (R$) *</label><input id="fc-valor" type="number" step="0.01" min="0" placeholder="0,00"/></div>
-    <div id="fc-resumo" style="margin-bottom:10px;"></div>
     <div class="modal-btns">
       <button class="btn-salvar" onclick="confirmarFecharCaixa()">🔒 Confirmar Fechamento</button>
       <button class="btn-cancelar-modal" onclick="fecharModal('modal-fechar-caixa')">Cancelar</button>
     </div>
   </div>
-</div>
-<script>
+</div><script>
 let usuario=null;
 let produtos=JSON.parse(localStorage.getItem('csh_prod')||'[]');
 let vendas=JSON.parse(localStorage.getItem('csh_vend')||'[]');
 let fornecs=JSON.parse(localStorage.getItem('csh_forn')||'[]');
-let caixa=JSON.parse(localStorage.getItem('csh_caixa')||'null'); 
-// caixa: {dataRef, abertoEm, valorAbertura, fechadoEm?, valorFechamento?}
+
+// agora temos caixa atual + histórico de caixas
+let caixaAtual=JSON.parse(localStorage.getItem('csh_caixa_atual')||'null');
+let caixas=JSON.parse(localStorage.getItem('csh_caixas')||'[]'); 
 
 let carrinho=[];
 let pagSel='';
@@ -434,7 +471,8 @@ function salvar(){
   localStorage.setItem('csh_prod',JSON.stringify(produtos));
   localStorage.setItem('csh_vend',JSON.stringify(vendas));
   localStorage.setItem('csh_forn',JSON.stringify(fornecs));
-  localStorage.setItem('csh_caixa',JSON.stringify(caixa));
+  localStorage.setItem('csh_caixa_atual',JSON.stringify(caixaAtual));
+  localStorage.setItem('csh_caixas',JSON.stringify(caixas));
 }
 
 function alerta(msg){
@@ -763,6 +801,7 @@ function finalizarVenda(){
   atualizarDash();
 }
 
+// ===== HISTÓRICO VENDAS =====
 function limparCarrinho(){
   carrinho=[];
   pagSel='';
@@ -774,7 +813,6 @@ function limparCarrinho(){
   renderCarrinho();
 }
 
-// ===== HISTÓRICO =====
 function renderHistorico(){
   const dt=document.getElementById('h-data').value;
   let lista=[...vendas].reverse();
@@ -812,7 +850,7 @@ function cancelarVenda(id){
   alerta('🗑️ Venda cancelada e estoque devolvido');
 }
 
-// ===== CAIXA =====
+// ===== CAIXA (ATUAL + HISTÓRICO) =====
 function abrirCaixaModal(){
   const hoje=new Date().toISOString().split('T')[0];
   document.getElementById('cx-data').value=hoje;
@@ -829,22 +867,23 @@ function confirmarAbrirCaixa(){
     return;
   }
   const agora=new Date();
-
-  caixa={
+  caixaAtual={
+    id:'cx_'+Date.now(),
     dataRef:data,
     abertoEm:agora.toISOString(),
     valorAbertura:valor,
     fechadoEm:null,
-    valorFechamento:null
+    valorFechamento:null,
+    esperadoEmDinheiro:null,
+    diferenca:null
   };
-
   salvar();
   fecharModal('modal-caixa');
   alerta('✅ Caixa aberto com R$ '+valor.toFixed(2));
   renderCaixa();
 }
 
-function calcularResumoCaixa(){
+function calcularResumoCaixa(caixa){
   if(!caixa)return null;
   const diaRef=caixa.dataRef||caixa.abertoEm.split('T')[0];
   const vendasDia=vendas.filter(v=>v.status==='ok'&&v.data.startsWith(diaRef));
@@ -857,23 +896,21 @@ function calcularResumoCaixa(){
 }
 
 function abrirFecharCaixaModal(){
-  const resumo=calcularResumoCaixa();
-  if(!resumo){
+  if(!caixaAtual){
     alerta('⚠️ Caixa não está aberto');
     return;
   }
+  const resumo=calcularResumoCaixa(caixaAtual);
   const fc=document.getElementById('fc-resumo');
   fc.innerHTML=`
-    <p style="font-size:12px;color:#6b7280;">
-      Dinheiro esperado no caixa: <strong>R$ ${resumo.esperadoEmDinheiro.toFixed(2)}</strong>
-    </p>
+    Dinheiro esperado no caixa: <strong>R$ ${resumo.esperadoEmDinheiro.toFixed(2)}</strong>
   `;
   document.getElementById('fc-valor').value='';
   document.getElementById('modal-fechar-caixa').classList.add('aberto');
 }
 
 function confirmarFecharCaixa(){
-  if(!caixa){
+  if(!caixaAtual){
     alerta('⚠️ Nenhum caixa aberto');
     return;
   }
@@ -883,14 +920,29 @@ function confirmarFecharCaixa(){
     alerta('⚠️ Informe um valor válido');
     return;
   }
-  const resumo=calcularResumoCaixa();
+  const resumo=calcularResumoCaixa(caixaAtual);
   const agora=new Date();
 
-  caixa.fechadoEm=agora.toISOString();
-  caixa.valorFechamento=valor;
-  salvar();
+  const esperado=resumo?resumo.esperadoEmDinheiro:0;
+  const diff=valor-esperado;
 
-  const diff=valor-(resumo?resumo.esperadoEmDinheiro:0);
+  // salvar no histórico
+  const registro={
+    id:caixaAtual.id,
+    dataRef:caixaAtual.dataRef,
+    abertoEm:caixaAtual.abertoEm,
+    valorAbertura:caixaAtual.valorAbertura,
+    fechadoEm:agora.toISOString(),
+    valorFechamento:valor,
+    esperadoEmDinheiro:esperado,
+    diferenca:diff
+  };
+  caixas.push(registro);
+
+  // atualizar caixaAtual como fechado
+  caixaAtual={...registro};
+
+  salvar();
   alerta('✅ Caixa fechado. Diferença: R$ '+diff.toFixed(2));
   fecharModal('modal-fechar-caixa');
   renderCaixa();
@@ -900,82 +952,122 @@ function renderCaixa(){
   const el=document.getElementById('caixa-body');
   if(!el)return;
 
-  if(!caixa){
-    el.innerHTML=`
+  // Caixa atual
+  let html='';
+  if(!caixaAtual){
+    html+=`
       <div class="caixa-fechado">
         <div class="ci">💵</div>
         <p>O caixa ainda não foi aberto.</p>
         <button class="btn-abrir-caixa" onclick="abrirCaixaModal()">Abrir Caixa</button>
       </div>
     `;
-    return;
+  }else{
+    const resumo=calcularResumoCaixa(caixaAtual);
+    const dataCaixa=(caixaAtual.dataRef||resumo.diaRef).split('-').reverse().join('/');
+    const dAbertura=new Date(caixaAtual.abertoEm);
+    const jaFechado=!!caixaAtual.fechadoEm;
+    const dFechamento=jaFechado?new Date(caixaAtual.fechadoEm):null;
+    const esperadoStr=resumo?resumo.esperadoEmDinheiro.toFixed(2):'0.00';
+    const fechamentoStr=jaFechado&&caixaAtual.valorFechamento!=null?caixaAtual.valorFechamento.toFixed(2):'—';
+    const diferenca=jaFechado?(caixaAtual.valorFechamento-(resumo?resumo.esperadoEmDinheiro:0)):0;
+    const diferencaStr=jaFechado?('R$ '+diferenca.toFixed(2)):'—';
+    const classeDif=jaFechado?(diferenca>0?'positivo':(diferenca<0?'negativo':'')):'';
+
+    html+=`
+      <div class="caixa-status">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">
+          <div class="caixa-status-titulo">Caixa do dia ${dataCaixa}</div>
+          <span class="${jaFechado?'badge-fechado-cx':'badge-aberto'}">
+            ${jaFechado?'Fechado':'Aberto'}
+          </span>
+        </div>
+        <div class="caixa-info-row">
+          <span>Abertura</span>
+          <span>${dAbertura.toLocaleString('pt-BR')}</span>
+        </div>
+        <div class="caixa-info-row">
+          <span>Valor de abertura</span>
+          <span>R$ ${caixaAtual.valorAbertura.toFixed(2)}</span>
+        </div>
+        <div class="caixa-info-row">
+          <span>Vendas em DINHEIRO</span>
+          <span>R$ ${resumo.vendasDin.toFixed(2)}</span>
+        </div>
+        <div class="caixa-info-row">
+          <span>Vendas em PIX</span>
+          <span>R$ ${resumo.vendasPix.toFixed(2)}</span>
+        </div>
+        <div class="caixa-info-row">
+          <span>Vendas em CARTÕES</span>
+          <span>R$ ${resumo.vendasCart.toFixed(2)}</span>
+        </div>
+        <div class="caixa-info-row destaque">
+          <span>Dinheiro esperado no caixa</span>
+          <span>R$ ${esperadoStr}</span>
+        </div>
+        <div class="caixa-info-row">
+          <span>Total de vendas no dia</span>
+          <span>R$ ${resumo.totalDia.toFixed(2)}</span>
+        </div>
+        <div class="caixa-info-row">
+          <span>Valor de fechamento</span>
+          <span>${fechamentoStr}</span>
+        </div>
+        <div class="caixa-info-row ${classeDif}">
+          <span>Diferença (fechamento − esperado)</span>
+          <span>${diferencaStr}</span>
+        </div>
+        ${jaFechado?`
+          <div class="caixa-info-row">
+            <span>Fechado em</span>
+            <span>${dFechamento.toLocaleString('pt-BR')}</span>
+          </div>
+        `:''}
+      </div>
+      <button class="btn-abrir-caixa" onclick="abrirCaixaModal()">Novo Caixa</button>
+      ${jaFechado?'':'<button class="btn-fechar-caixa" onclick="abrirFecharCaixaModal()">Fechar Caixa</button>'}
+      <button class="btn-imprimir" onclick="imprimirCaixa()">🖨️ Imprimir Caixa do Dia</button>
+    `;
   }
 
-  const resumo=calcularResumoCaixa();
-  const dataCaixa=(caixa.dataRef||resumo.diaRef).split('-').reverse().join('/');
-  const dAbertura=new Date(caixa.abertoEm);
-  const jaFechado=!!caixa.fechadoEm;
-  const dFechamento=jaFechado?new Date(caixa.fechadoEm):null;
-  const esperadoStr=resumo?resumo.esperadoEmDinheiro.toFixed(2):'0.00';
-  const fechamentoStr=jaFechado&&caixa.valorFechamento!=null?caixa.valorFechamento.toFixed(2):'—';
-  const diferenca=jaFechado?(caixa.valorFechamento-(resumo?resumo.esperadoEmDinheiro:0)):0;
-  const diferencaStr=jaFechado?('R$ '+diferenca.toFixed(2)):'—';
-  const classeDif=jaFechado?(diferenca>0?'positivo':(diferenca<0?'negativo':'')):'';
-
-  el.innerHTML=`
-    <div class="caixa-status">
-      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">
-        <div class="caixa-status-titulo">Caixa do dia ${dataCaixa}</div>
-        <span class="${jaFechado?'badge-fechado':'badge-aberto'}">
-          ${jaFechado?'Fechado':'Aberto'}
-        </span>
-      </div>
-      <div class="caixa-info-row">
-        <span>Abertura</span>
-        <span>${dAbertura.toLocaleString('pt-BR')}</span>
-      </div>
-      <div class="caixa-info-row">
-        <span>Valor de abertura</span>
-        <span>R$ ${caixa.valorAbertura.toFixed(2)}</span>
-      </div>
-      <div class="caixa-info-row">
-        <span>Vendas em DINHEIRO</span>
-        <span>R$ ${resumo.vendasDin.toFixed(2)}</span>
-      </div>
-      <div class="caixa-info-row">
-        <span>Vendas em PIX</span>
-        <span>R$ ${resumo.vendasPix.toFixed(2)}</span>
-      </div>
-      <div class="caixa-info-row">
-        <span>Vendas em CARTÕES</span>
-        <span>R$ ${resumo.vendasCart.toFixed(2)}</span>
-      </div>
-      <div class="caixa-info-row destaque">
-        <span>Dinheiro esperado no caixa</span>
-        <span>R$ ${esperadoStr}</span>
-      </div>
-      <div class="caixa-info-row">
-        <span>Total de vendas no dia</span>
-        <span>R$ ${resumo.totalDia.toFixed(2)}</span>
-      </div>
-      <div class="caixa-info-row">
-        <span>Valor de fechamento</span>
-        <span>${fechamentoStr}</span>
-      </div>
-      <div class="caixa-info-row ${classeDif}">
-        <span>Diferença (fechamento − esperado)</span>
-        <span>${diferencaStr}</span>
-      </div>
-      ${jaFechado?`
-        <div class="caixa-info-row">
-          <span>Fechado em</span>
-          <span>${dFechamento.toLocaleString('pt-BR')}</span>
+  // Histórico de caixas
+  if(caixas.length){
+    const hist=[...caixas].sort((a,b)=> (a.dataRef<b.dataRef?1:-1));
+    html+=`<div class="hist-cx-titulo">📜 Histórico de Caixas</div>`;
+    html+=hist.map(c=>{
+      const data=c.dataRef.split('-').reverse().join('/');
+      const diffClass=c.diferenca>0?'diff-pos':(c.diferenca<0?'diff-neg':'');
+      return `
+        <div class="hist-cx-card">
+          <div class="hist-cx-topo">
+            <span class="hist-cx-data">${data}</span>
+            <span class="badge-fechado-cx">Fechado</span>
+          </div>
+          <div class="hist-cx-rows">
+            <div class="hist-cx-row">
+              <span>Abertura</span>
+              <span>R$ ${c.valorAbertura.toFixed(2)}</span>
+            </div>
+            <div class="hist-cx-row">
+              <span>Fechamento</span>
+              <span>R$ ${c.valorFechamento.toFixed(2)}</span>
+            </div>
+            <div class="hist-cx-row">
+              <span>Esperado em dinheiro</span>
+              <span>R$ ${c.esperadoEmDinheiro.toFixed(2)}</span>
+            </div>
+            <div class="hist-cx-row">
+              <span>Diferença</span>
+              <span class="${diffClass}">R$ ${c.diferenca.toFixed(2)}</span>
+            </div>
+          </div>
         </div>
-      `:''}
-    </div>
-    <button class="btn-abrir-caixa" onclick="abrirCaixaModal()">Novo Caixa</button>
-    ${jaFechado?'':'<button class="btn-fechar-caixa" onclick="abrirFecharCaixaModal()">Fechar Caixa</button>'}
-  `;
+      `;
+    }).join('');
+  }
+
+  el.innerHTML=html;
 }
 
 // ===== FORNECEDORES =====
@@ -1090,9 +1182,18 @@ function renderRel(){
   `;
 }
 
+function imprimirRelatorio(){
+  window.print();
+}
+
+function imprimirCaixa(){
+  ir('caixa');
+  setTimeout(()=>window.print(),300);
+}
+
 // ===== BACKUP =====
 function fazerBackup(){
-  const dados={produtos,vendas,fornecs,caixa,geradoEm:new Date().toISOString()};
+  const dados={produtos,vendas,fornecs,caixaAtual,caixas,geradoEm:new Date().toISOString()};
   const json=JSON.stringify(dados,null,2);
   const blob=new Blob([json],{type:'application/json'});
   const url=URL.createObjectURL(blob);
@@ -1125,7 +1226,8 @@ function restaurarBackup(ev){
       produtos=dados.produtos;
       vendas=dados.vendas;
       fornecs=dados.fornecs;
-      caixa=dados.caixa||null;
+      caixaAtual=dados.caixaAtual||null;
+      caixas=dados.caixas||[];
       salvar();
       alerta('✅ Backup restaurado com sucesso');
       renderProdutos();
@@ -1149,7 +1251,7 @@ function fecharModal(id){
 }
 
 // inicial
-if(produtos.length||vendas.length||fornecs.length||caixa){
+if(produtos.length||vendas.length||fornecs.length||caixaAtual||caixas.length){
   atualizarDash();
 }
 </script>
